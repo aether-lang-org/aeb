@@ -76,6 +76,23 @@ main() {
             spec.assert_str_eq(ae_lib_flags("fs", b2, "/src"),
                 " --emit=lib --with=fs --extra /abs/x.c --extra /src/rel/y.c", "mixed extras")
         }
+        // size() -> --size, placed after --with= and before any --extra.
+        spec.it("size() adds --size after --with, before --extra") callback {
+            b3 = map.new()
+            map.put(b3, "lib_size", "1")
+            spec.assert_str_eq(ae_lib_flags("net,os,fs", b3, "/src"),
+                " --emit=lib --with=net,os,fs --size", "size no extras")
+            ex3 = list.new()
+            list.add(ex3, "/abs/s.c")
+            map.put(b3, "extra_source", ex3)
+            spec.assert_str_eq(ae_lib_flags("net", b3, "/src"),
+                " --emit=lib --with=net --size --extra /abs/s.c", "size before extra")
+        }
+        spec.it("no size() -> no --size") callback {
+            b4 = map.new()
+            spec.assert_str_eq(ae_lib_flags("net", b4, "/src"),
+                " --emit=lib --with=net", "absent lib_size")
+        }
     }
 
     return spec.run_summary(fw)

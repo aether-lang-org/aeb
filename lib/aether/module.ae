@@ -35,6 +35,14 @@ caps(_ctx: ptr, cap_csv: string) {
     _e = map.put(_ctx, "csrc_caps", cap_csv)
 }
 
+// size() — opt into `ae build --size` for a shared_lib (size-optimize + strip
+// debug info). Off by default. Threaded through the --emit=lib shell-out; on a
+// cross build (target=...) it produces the same small/stripped .so/.dylib/.dll
+// that `ae build --size` does on the host. No-op on the non-shell manual paths.
+size(_ctx: ptr) {
+    _e = map.put(_ctx, "lib_size", "1")
+}
+
 // go_source(file) — the user's .go for an aether.tinygo_lib node.
 // TinyGo compiles it to a c-shared .so (the `output`); the Aether
 // program that deps this lib tinygo.load()s that .so at runtime.
@@ -1521,6 +1529,12 @@ ae_lib_flags(caps: string, builder_map: ptr, source_dir: string) {
     flags = " --emit=lib"
     if string.length(caps) > 0 {
         flags = string.concat(flags, string.concat(" --with=", caps))
+    }
+    if builder_map != null {
+        // size() opt-in — size-optimize + strip (matches release/build.sh's --size).
+        if map.has(builder_map, "lib_size") == 1 {
+            flags = string.concat(flags, " --size")
+        }
     }
     if builder_map != null {
         if map.has(builder_map, "extra_source") == 1 {
