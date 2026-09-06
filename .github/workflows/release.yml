@@ -130,6 +130,15 @@ jobs:
           mkdir -p "$STAGE"
 
           cp aeb AETHER_PIN AETHER_FETCH Makefile LICENSE README.md "$STAGE/"
+          # Stamp the release TAG into the payload so an installed aeb can
+          # self-report its version. The payload has no .git, so make install's
+          # `git describe` returns "unknown"; without this VERSION file
+          # `aeb --version` reported a generic 0.0.0-dev even on a tagged
+          # release. make install copies VERSION into AEB_STAMP's `version`
+          # field, which aeb-cli prints. Source installs ship no VERSION file
+          # and correctly keep 0.0.0-dev+<sha>.
+          # (asks/aeb-version-does-not-embed-the-release-tag.md)
+          printf '%s' "$TAG" > "$STAGE/VERSION"
           # veto/ + sandbox/ are 4 KB each and the shipped Makefile's
           # `install` target copies BOTH unconditionally. Omitting them made
           # `make install` fail outright on the released payload —

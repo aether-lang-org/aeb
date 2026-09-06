@@ -61,17 +61,31 @@ _resolve_root() {
     return os.getcwd()
 }
 
+// _aeb_stamp_summary(text) — the "aeb <ver> (git <commit>, installed <when>)"
+// line, from an AEB_STAMP's fields. A released payload carries a `version`
+// field (the release tag, e.g. v0.294) that make install copied from the
+// bundled VERSION file, so a released install reports its TAG rather than the
+// generic 0.0.0-dev. A source `make install` writes no VERSION file, so the
+// field is absent and we keep 0.0.0-dev+<src> — which correctly marks a dev
+// build. (asks/aeb-version-does-not-embed-the-release-tag.md)
+_aeb_stamp_summary(text: string) {
+    src = aebcli.stamp_field(text, "src")
+    commit = aebcli.stamp_field(text, "commit")
+    installed = aebcli.stamp_field(text, "installed")
+    version = aebcli.stamp_field(text, "version")
+    ver = "0.0.0-dev+${src}"
+    if string.length(version) > 0 { ver = version }
+    return "aeb ${ver}   (git ${commit}, installed ${installed})"
+}
+
 // `--version`: provenance from $AEB_HOME/AEB_STAMP (parsed with the pure
 // stamp_field), then the underlying ae version. Mirrors the bash.
 _print_version(aeb_home: string) {
     stamp = string.concat(aeb_home, "/AEB_STAMP")
     if file.exists(stamp) == 1 {
         text, _e = fs.read(stamp)
-        src = aebcli.stamp_field(text, "src")
-        commit = aebcli.stamp_field(text, "commit")
-        installed = aebcli.stamp_field(text, "installed")
         toolchain = aebcli.stamp_field(text, "toolchain")
-        println("aeb 0.0.0-dev+${src}   (git ${commit}, installed ${installed})")
+        println(_aeb_stamp_summary(text))
         println("  AEB_HOME     ${aeb_home}")
         println("  tools built  ${toolchain}")
     }
@@ -89,10 +103,7 @@ _aeb_version_line(aeb_home: string) {
     stamp = string.concat(aeb_home, "/AEB_STAMP")
     if file.exists(stamp) == 1 {
         text, _e = fs.read(stamp)
-        src = aebcli.stamp_field(text, "src")
-        commit = aebcli.stamp_field(text, "commit")
-        installed = aebcli.stamp_field(text, "installed")
-        return "aeb 0.0.0-dev+${src}   (git ${commit}, installed ${installed})"
+        return _aeb_stamp_summary(text)
     }
     return "aeb 0.0.0-dev   (no AEB_STAMP — un-installed tree at ${aeb_home})"
 }

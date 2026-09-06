@@ -292,7 +292,17 @@ if [[ "${1:-}" == "--version" ]]; then
         commit=$(awk '$1=="commit"{print $2}' "$stamp")
         installed=$(awk '$1=="installed"{sub(/^installed /,"");print}' "$stamp")
         toolchain=$(awk '$1=="toolchain"{sub(/^toolchain /,"");print}' "$stamp")
-        echo "aeb 0.0.0-dev+${src}   (git ${commit}, installed ${installed})"
+        # A released payload carries a `version` field (the tag, e.g. v0.294)
+        # that make install copied from the bundled VERSION file. The payload
+        # has no .git, so `git describe` in AEB_STAMP's `commit` is "unknown" —
+        # this field is how a released install reports its TAG rather than a
+        # generic 0.0.0-dev. Source `make install` writes no VERSION file, so
+        # the field is absent and we keep 0.0.0-dev+<src>, correctly marking a
+        # dev build. (asks/aeb-version-does-not-embed-the-release-tag.md)
+        version=$(awk '$1=="version"{print $2}' "$stamp")
+        ver="0.0.0-dev+${src}"
+        [[ -n "$version" ]] && ver="$version"
+        echo "aeb ${ver}   (git ${commit}, installed ${installed})"
         echo "  AEB_HOME     $AEB_HOME"
         echo "  tools built  ${toolchain}"
     else

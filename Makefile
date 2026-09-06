@@ -118,13 +118,14 @@ install: $(INSTALL_TOOLS)
 	chmod +x $(BINDIR)/aeb
 	@SRCH=$$( $(SRCHASH_CMD) ); \
 	 GITD=$$(git describe --always --dirty 2>/dev/null || echo unknown); \
-	 printf 'src %s\ncommit %s\ninstalled %s\ntoolchain %s\n' \
-	    "$$SRCH" "$$GITD" "$$(date '+%Y-%m-%d %H:%M:%S')" "$$($(AETHER) --version 2>/dev/null | head -1)" \
+	 VER=$$( [ -f VERSION ] && tr -d '[:space:]' < VERSION || echo 0.0.0-dev+$$SRCH ); \
+	 printf 'src %s\ncommit %s\ninstalled %s\ntoolchain %s\nversion %s\n' \
+	    "$$SRCH" "$$GITD" "$$(date '+%Y-%m-%d %H:%M:%S')" "$$($(AETHER) --version 2>/dev/null | head -1)" "$$VER" \
 	    > $(SHAREDIR)/AEB_STAMP; \
 	 echo "installed:"; \
 	 echo "  wrapper:  $(BINDIR)/aeb"; \
 	 echo "  runtime:  $(SHAREDIR)/"; \
-	 echo "  version:  aeb 0.0.0-dev+$$SRCH (git $$GITD)"; \
+	 echo "  version:  aeb $$VER (git $$GITD)"; \
 	 echo "  (remote build agent + lease minter NOT installed — opt in with BOTH at once:)"; \
 	 echo "        aeb tools/remote-agent/.install.ae          # → aeb-agent + aeb-lease"; \
 	 echo "     (or individually: aeb tools/agent/.install.ae  /  aeb tools/lease/.install.ae)"

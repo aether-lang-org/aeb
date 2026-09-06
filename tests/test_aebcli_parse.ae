@@ -172,6 +172,18 @@ main() {
         spec.it("last line without trailing newline") callback {
             spec.assert_str_eq(stamp_field("a 1\nb 2", "b"), "2", "last line no nl")
         }
+        // The `version` field a released payload carries (the tag). Present →
+        // aeb --version reports the tag; absent → the caller falls back to
+        // 0.0.0-dev+<src>. (asks/aeb-version-does-not-embed-the-release-tag.md)
+        spec.it("version token present → the release tag") callback {
+            spec.assert_str_eq(
+                stamp_field("src abc\ncommit unknown\nversion v0.295\n", "version"),
+                "v0.295", "version tag")
+        }
+        spec.it("version token absent → empty (fall back to 0.0.0-dev)") callback {
+            spec.assert_str_eq(
+                stamp_field("src abc\ncommit deadbeef\n", "version"), "", "no version field")
+        }
     }
 
     return spec.run_summary(fw)

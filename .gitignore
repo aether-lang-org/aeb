@@ -53,3 +53,7 @@ tools/libaether_sandbox.so
 tools/aeb-sbom
 tools/aeb-trace
 tools/bld-*.jar
+
+# Release-payload version marker (written by release.yml into the bootstrap
+# stage, read by make install into AEB_STAMP). Never present in the source tree.
+/VERSION
