@@ -171,11 +171,13 @@ isn't):
 command -v ae || export PATH="$HOME/.local/bin:$PATH"   # add to your shell rc to persist
 ```
 
-**Then install aeb** the same way — one line into the same no-sudo prefix (pin
-in CI with `AEB_REF=v0.297`):
+**Then install aeb** the same way — one line into the same no-sudo prefix. Like
+`ae`, this is binary-first: it downloads the prebuilt, **sha256-verified** aeb
+release for your platform (no compile), falling back to a source build only when
+no asset exists. Pin in CI with `AEB_REF=v0.297`:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/get.sh | sh
 ```
 
 Or from a clone:
