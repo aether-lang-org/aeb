@@ -153,18 +153,52 @@ java/components/vowelbase/.build.ae
 ## Installing
 
 aeb is written in Aether, so it needs the [Aether toolchain](https://github.com/aether-lang-dev/aether)
-(`ae`) first. Then, to a no-sudo prefix (`~/.local`):
+(`ae`) first.
 
-```bash
-# Latest tag (or pin one for CI: AEB_REF=v0.042):
-curl -sSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/install.sh | sh
+**Don't have Aether's `ae` yet?** One line installs it (Aether's own installer,
+into `~/.local`; `PREFIX=` to override, `AETHER_REF=vX.Y.Z` to pin). Aether
+compiles to C, so the only prerequisites are a C compiler and GNU make — no
+chicken-and-egg toolchain:
 
-# Or from a clone:
+```sh
+curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aether/main/get.sh | sh
+```
+
+Make sure `~/.local/bin` is on your `PATH` (the installer prints a note if it
+isn't):
+
+```sh
+command -v ae || export PATH="$HOME/.local/bin:$PATH"   # add to your shell rc to persist
+```
+
+**Then install aeb** the same way — one line into the same no-sudo prefix (pin
+in CI with `AEB_REF=v0.297`):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/install.sh | sh
+```
+
+Or from a clone:
+
+```sh
 git clone https://github.com/aether-lang-dev/aeb.git && cd aeb && make install
 ```
 
-Ensure `~/.local/bin` is on your `PATH`. Full guide — pinning in CI,
-tracking HEAD, an automation recipe — in
+`aeb --version` then reports the release tag it installed.
+
+**Bootstrapping a repo that builds with aeb?** [`aebboot.sh`](aebboot.sh) is the
+one shared helper that ensures **both** `ae` and `aeb` in the right order
+(aeb's installer needs an `ae` to target). It's binary-first — downloads the
+per-platform gh-release tarballs (with a runtime `.sha256` verify on aeb),
+falling back to the source installers above for no-asset platforms or
+`AEBBOOT_NO_BINARY=1`. Source it from a repo's `bootstrap.sh` with one curl:
+
+```sh
+. <(curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/aebboot.sh)
+AE_PIN=0.645.0 aeb_bootstrap        # ensures ae (>= AE_PIN) THEN aeb
+```
+
+Full guide — pinning in CI, tracking HEAD, an automation recipe — in
 [docs/guides/bootstrap-from-source.md](docs/guides/bootstrap-from-source.md).
 
 ## Setup
