@@ -188,17 +188,21 @@ git clone https://github.com/aether-lang-dev/aeb.git && cd aeb && make install
 
 `aeb --version` then reports the release tag it installed.
 
-**Bootstrapping a repo that builds with aeb?** [`aebboot.sh`](aebboot.sh) is the
-one shared helper that ensures **both** `ae` and `aeb` in the right order
-(aeb's installer needs an `ae` to target). It's binary-first — downloads the
-per-platform gh-release tarballs (with a runtime `.sha256` verify on aeb),
-falling back to the source installers above for no-asset platforms or
-`AEBBOOT_NO_BINARY=1`. Source it from a repo's `bootstrap.sh` with one curl:
+**Bootstrapping a repo that builds with aeb?** The same [`get.sh`](get.sh) is
+*also a sourceable library* — the one helper that ensures **both** `ae` and
+`aeb` in the right order (aeb's installer needs an `ae` to target). Executed
+(`| sh`) it installs; **sourced** it just defines the functions, so a repo's
+`bootstrap.sh` can call `aeb_bootstrap` (or `ae_ensure` / `aeb_ensure`) against
+its own pin:
 
 ```sh
-. <(curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/aebboot.sh)
+. <(curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/get.sh)
 AE_PIN=0.645.0 aeb_bootstrap        # ensures ae (>= AE_PIN) THEN aeb
 ```
+
+Both tools are binary-first — prebuilt gh-release tarballs (with a runtime
+`.sha256` verify on aeb), falling back to the source installers for no-asset
+platforms or `AEB_FROM_SOURCE=1`.
 
 Full guide — pinning in CI, tracking HEAD, an automation recipe — in
 [docs/guides/bootstrap-from-source.md](docs/guides/bootstrap-from-source.md).
