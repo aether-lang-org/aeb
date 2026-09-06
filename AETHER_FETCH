@@ -118,4 +118,9 @@
 # `ae add @tag` dependency-pin fix, which aeb does not use. Verified against the
 # real 0.640.0 tarball: aeb builds clean, full suite 134/134; glibc floor
 # GLIBC_2.34 (Debian-12 safe); all platform assets present. PIN in lockstep.
-0.640.0
+#
+# Raised 0.640.0 -> 0.643.0 (2026-09-06). Newest published aether; fixes a heap-
+# string-tracker codegen bug that silently corrupted punned-prefix structs. Verified
+# against the real 0.643.0 tarball: aeb builds clean, full suite 134/134; glibc
+# floor GLIBC_2.34 (Debian-12 safe); all platform assets present. PIN in lockstep.
+0.643.0

@@ -83,4 +83,11 @@
 # the floor moves with FETCH per the no-back-compat DSL policy. Verified against
 # the real 0.640.0 linux tarball: aeb builds clean, full suite 134/134; glibc floor
 # GLIBC_2.34 (Debian-12 safe); all platform assets published.
-0.640.0
+#
+# Raised 0.640.0 -> 0.643.0 (2026-09-06) in lockstep with AETHER_FETCH. 0.643 fixes
+# a heap-string-tracker codegen bug that silently corrupted structs sharing a punned
+# field prefix (no diagnostic) — a real memory-safety fix, though not one aeb newly
+# requires; the floor moves with FETCH per the no-back-compat DSL policy. Verified
+# against the real 0.643.0 linux tarball: aeb builds clean, full suite 134/134;
+# glibc floor GLIBC_2.34 (Debian-12 safe); all platform assets published.
+0.643.0
