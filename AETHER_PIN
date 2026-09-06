@@ -90,4 +90,11 @@
 # requires; the floor moves with FETCH per the no-back-compat DSL policy. Verified
 # against the real 0.643.0 linux tarball: aeb builds clean, full suite 134/134;
 # glibc floor GLIBC_2.34 (Debian-12 safe); all platform assets published.
-0.643.0
+#
+# Raised 0.643.0 -> 0.645.0 (2026-09-06) in lockstep with AETHER_FETCH. 0.645 adds
+# a lint (warn on `malloc(<literal>) as *T`, the layout-corruption pattern 0.643
+# fixed) — a purely additive diagnostic, no grammar/API/primitive change aeb needs;
+# the floor moves with FETCH per the no-back-compat DSL policy. Verified against
+# the real 0.645.0 linux tarball: aeb builds clean, full suite 134/134; glibc floor
+# GLIBC_2.34 (Debian-12 safe); all platform assets published.
+0.645.0
