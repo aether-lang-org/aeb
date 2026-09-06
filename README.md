@@ -191,9 +191,10 @@ git clone https://github.com/aether-lang-dev/aeb.git && cd aeb && make install
 **Bootstrapping a repo that builds with aeb?** The same [`get.sh`](get.sh) is
 *also a sourceable library* — the one helper that ensures **both** `ae` and
 `aeb` in the right order (aeb's installer needs an `ae` to target). Executed
-(`| sh`) it installs; **sourced** it just defines the functions, so a repo's
-`bootstrap.sh` can call `aeb_bootstrap` (or `ae_ensure` / `aeb_ensure`) against
-its own pin:
+(`| sh`) it installs; **sourced** it just defines the functions
+(`aeb_bootstrap`, `ae_ensure`, `aeb_ensure`) without running anything. So a
+consumer repo's README (or CI step) carries this two-liner against its own pin —
+no `bootstrap.sh` file needed:
 
 ```sh
 . <(curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/get.sh)

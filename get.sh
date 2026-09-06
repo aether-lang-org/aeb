@@ -7,7 +7,7 @@
 #     curl -fsSL .../get.sh | sh -s -- v0.297        # pin the aeb release (positional)
 #     AEB_REF=v0.297 AE_PIN=0.645.0 sh get.sh         # pin both, via env
 #
-#   SOURCED (a repo's bootstrap.sh) — the same logic as callable functions:
+#   SOURCED (a consumer repo's README two-liner / CI step) — same logic as fns:
 #     . <(curl -fsSL https://raw.githubusercontent.com/aether-lang-dev/aeb/main/get.sh)
 #     AE_PIN=0.645.0 aeb_bootstrap        # ensures ae (>= AE_PIN) THEN aeb
 #     #   or the two steps yourself:  ae_ensure ; aeb_ensure
@@ -303,7 +303,7 @@ aeb_bootstrap() {
 
 # ===========================================================================
 # EXECUTED-MODE entry point. Runs only when this file is EXECUTED (curl|sh or
-# `sh get.sh`), NOT when SOURCED (`. get.sh`) — so a consumer's bootstrap.sh
+# `sh get.sh`), NOT when SOURCED (`. get.sh`) — so a consumer sourcing it
 # gets the functions above without triggering an install. The guard: a sourced
 # script has $0 = the shell (sh/bash/-sh), an executed one has $0 = the path.
 # ===========================================================================
